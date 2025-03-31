@@ -2,4 +2,4 @@
 
 namespace Rpungello\RadarSdk;
 
-class RadarSdkClass {}
+class RadarClient {}

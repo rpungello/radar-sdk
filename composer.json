@@ -3,7 +3,9 @@
     "description": "PHP SDK for interfacing with radar.com",
     "keywords": [
         "rpungello",
-        "radar-sdk"
+        "radar",
+        "geocoding",
+        "location"
     ],
     "homepage": "https://github.com/rpungello/radar-sdk",
     "license": "MIT",
@@ -15,7 +17,7 @@
         }
     ],
     "require": {
-        "php": "^8.4"
+        "php": "^8.1"
     },
     "require-dev": {
         "pestphp/pest": "^3.0",
