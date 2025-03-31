@@ -2,7 +2,6 @@
 
 namespace Rpungello\RadarSdk\Dtos;
 
-use Rpungello\RadarSdk\Dtos\ResponseDto;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
 

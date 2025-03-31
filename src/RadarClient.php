@@ -40,7 +40,7 @@ class RadarClient extends SdkClient
 
         try {
             return $this->getDto('geocode/forward', ForwardGeocodeResponse::class, $queryParams);
-        } catch(BadResponseException $e) {
+        } catch (BadResponseException $e) {
             if ($e->getCode() === 401) {
                 throw new UnauthorizedException($e);
             } else {
@@ -55,12 +55,13 @@ class RadarClient extends SdkClient
     {
         $config = parent::getGuzzleClientConfig();
         $config['headers']['authorization'] = $this->apiKey;
+
         return $config;
     }
 
     private static function getUserAgent(): string
     {
-        return 'rpungello/radar-sdk/' . static::getVersion();
+        return 'rpungello/radar-sdk/'.static::getVersion();
     }
 
     private static function getVersion(): string

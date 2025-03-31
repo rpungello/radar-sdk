@@ -2,7 +2,6 @@
 
 namespace Rpungello\RadarSdk\Exceptions;
 
-use Rpungello\RadarSdk\Exceptions\ApiException;
 use Throwable;
 
 class UnauthorizedException extends ApiException
