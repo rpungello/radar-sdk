@@ -26,7 +26,7 @@ class Address extends DataTransferObject
 
     public ?string $layer = null;
 
-    public ?string $latitude = null;
+    public ?float $latitude = null;
 
-    public ?string $longitude = null;
+    public ?float $longitude = null;
 }
