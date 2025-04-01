@@ -4,7 +4,7 @@ namespace Rpungello\RadarSdk\Exceptions;
 
 use Throwable;
 
-class UnauthorizedException extends ApiException
+class UnauthorizedException extends ClientException
 {
     public function __construct(?Throwable $previous = null)
     {

@@ -8,6 +8,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use Rpungello\RadarSdk\Dtos\ForwardGeocodeResponse;
 use Rpungello\RadarSdk\Exceptions\ApiException;
+use Rpungello\RadarSdk\Exceptions\ForbiddenException;
+use Rpungello\RadarSdk\Exceptions\PaymentRequiredException;
 use Rpungello\RadarSdk\Exceptions\UnauthorizedException;
 use Rpungello\SdkClient\SdkClient;
 use RuntimeException;
@@ -20,7 +22,7 @@ class RadarClient extends SdkClient
         parent::__construct("https://api.radar.io/v$this->apiVersion/", $handler, static::getUserAgent());
     }
 
-    public function forwardGeocode(string $query, array $layers = [], ?string $country = null, ?string $lang = null)
+    public function forwardGeocode(string $query, array $layers = [], ?string $country = null, ?string $lang = null): ForwardGeocodeResponse
     {
         $queryParams = [
             'query' => $query,
@@ -41,13 +43,22 @@ class RadarClient extends SdkClient
         try {
             return $this->getDto('geocode/forward', ForwardGeocodeResponse::class, $queryParams);
         } catch (BadResponseException $e) {
-            if ($e->getCode() === 401) {
-                throw new UnauthorizedException($e);
-            } else {
-                throw new ApiException($e->getMessage(), $e->getCode(), $e);
-            }
+            throw $this->parseBadResponseException($e);
         } catch (GuzzleException|UnknownProperties) {
             throw new RuntimeException('Error while fetching forward geocode data');
+        }
+    }
+
+    protected function parseBadResponseException(BadResponseException $e): ApiException
+    {
+        if ($e->getCode() === 401) {
+            return new UnauthorizedException($e);
+        } elseif ($e->getCode() === 402) {
+            return new PaymentRequiredException($e);
+        } elseif ($e->getCode() === 403) {
+            return new ForbiddenException($e);
+        } else {
+            return new ApiException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
