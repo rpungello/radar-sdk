@@ -2,7 +2,4 @@
 
 namespace Rpungello\RadarSdk\Exceptions;
 
-class ClientException extends ApiException
-{
-
-}
+class ClientException extends ApiException {}

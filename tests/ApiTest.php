@@ -35,8 +35,8 @@ it('can geocode addresses', function () {
                     ],
                 ],
                 'confidence' => 'exact',
-            ]
-        ]
+            ],
+        ],
     ];
 
     $mock = new MockHandler([
