@@ -2,7 +2,4 @@
 
 namespace Rpungello\RadarSdk\Exceptions;
 
-class NoResultsException extends \RuntimeException
-{
-
-}
+class NoResultsException extends \RuntimeException {}
