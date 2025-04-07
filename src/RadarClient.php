@@ -22,6 +22,10 @@ class RadarClient extends SdkClient
         parent::__construct("https://api.radar.io/v$this->apiVersion/", $handler, static::getUserAgent());
     }
 
+    /**
+     * @throws ApiException
+     * @throws RuntimeException
+     */
     public function forwardGeocode(string $query, array $layers = [], ?string $country = null, ?string $lang = null): ForwardGeocodeResponse
     {
         $queryParams = [
