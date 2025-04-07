@@ -6,7 +6,9 @@ use Composer\InstalledVersions;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
+use Rpungello\RadarSdk\Dtos\Coordinate;
 use Rpungello\RadarSdk\Dtos\ForwardGeocodeResponse;
+use Rpungello\RadarSdk\Dtos\ReverseGeocodeResponse;
 use Rpungello\RadarSdk\Exceptions\ApiException;
 use Rpungello\RadarSdk\Exceptions\ForbiddenException;
 use Rpungello\RadarSdk\Exceptions\PaymentRequiredException;
@@ -50,6 +52,21 @@ class RadarClient extends SdkClient
             throw $this->parseBadResponseException($e);
         } catch (GuzzleException|UnknownProperties) {
             throw new RuntimeException('Error while fetching forward geocode data');
+        }
+    }
+
+    public function reverseGeocode(Coordinate $coordinate, array $layers = []): ReverseGeocodeResponse
+    {
+        $queryParams = [
+            'coordinates' => "$coordinate->latitude,$coordinate->longitude",
+        ];
+
+        try {
+            return $this->getDto('geocode/reverse', ReverseGeocodeResponse::class, $queryParams);
+        } catch (BadResponseException $e) {
+            throw $this->parseBadResponseException($e);
+        } catch (GuzzleException|UnknownProperties) {
+            throw new RuntimeException('Error while fetching reverse geocode data');
         }
     }
 
