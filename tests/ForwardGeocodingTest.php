@@ -3,6 +3,7 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Rpungello\RadarSdk\Drivers\GuzzleDriver;
 use Rpungello\RadarSdk\Dtos\ForwardGeocodeResponse;
 use Rpungello\RadarSdk\Exceptions\ForbiddenException;
 use Rpungello\RadarSdk\Exceptions\NoResultsException;
@@ -44,7 +45,7 @@ it('can geocode addresses', function () {
         new Response(200, ['content-type' => 'application/json'], json_encode($responseData)),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
     $response = $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
     expect($response)->toBeInstanceOf(ForwardGeocodeResponse::class)
         ->and($response->addresses)->toHaveCount(1)
@@ -66,7 +67,7 @@ it('can handle unauthorized errors', function () {
         new Response(401, ['content-type' => 'application/json'], json_encode(['error' => 'Unauthorized'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
 })->throws(UnauthorizedException::class);
@@ -76,7 +77,7 @@ it('can handle payment required errors', function () {
         new Response(402, ['content-type' => 'application/json'], json_encode(['error' => 'Payment Required'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
 })->throws(\Rpungello\RadarSdk\Exceptions\PaymentRequiredException::class);
@@ -86,7 +87,7 @@ it('can handle forbidden errors', function () {
         new Response(403, ['content-type' => 'application/json'], json_encode(['error' => 'Forbidden'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
 })->throws(ForbiddenException::class);
@@ -126,7 +127,7 @@ it('can geocode addresses and return first coordinates', function () {
         new Response(200, ['content-type' => 'application/json'], json_encode($responseData)),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
     $response = $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
     expect($response)->toBeInstanceOf(ForwardGeocodeResponse::class)
         ->and($response->getCoordinatesForFirstResult()->latitude)->toBe(40.1234)
@@ -145,7 +146,7 @@ it('throws exceptions loading first coordinates with no results', function () {
         new Response(200, ['content-type' => 'application/json'], json_encode($responseData)),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
     $response = $client->forwardGeocode('123 Test Street, Test City, NJ 12345');
     expect($response)->toBeInstanceOf(ForwardGeocodeResponse::class);
     $response->getCoordinatesForFirstResult();

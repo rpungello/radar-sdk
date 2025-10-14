@@ -3,6 +3,7 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Rpungello\RadarSdk\Drivers\GuzzleDriver;
 use Rpungello\RadarSdk\Dtos\Coordinate;
 use Rpungello\RadarSdk\Dtos\ReverseGeocodeResponse;
 use Rpungello\RadarSdk\Exceptions\ForbiddenException;
@@ -45,7 +46,7 @@ it('can geocode addresses', function () {
         new Response(200, ['content-type' => 'application/json'], json_encode($responseData)),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
     $response = $client->reverseGeocode(new Coordinate(-74.1234, 40.1234));
     expect($response)->toBeInstanceOf(ReverseGeocodeResponse::class)
         ->and($response->addresses)->toHaveCount(1)
@@ -67,7 +68,7 @@ it('can handle unauthorized errors', function () {
         new Response(401, ['content-type' => 'application/json'], json_encode(['error' => 'Unauthorized'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->reverseGeocode(new Coordinate(-74.1234, 40.1234));
 })->throws(UnauthorizedException::class);
@@ -77,7 +78,7 @@ it('can handle payment required errors', function () {
         new Response(402, ['content-type' => 'application/json'], json_encode(['error' => 'Payment Required'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->reverseGeocode(new Coordinate(-74.1234, 40.1234));
 })->throws(PaymentRequiredException::class);
@@ -87,7 +88,7 @@ it('can handle forbidden errors', function () {
         new Response(403, ['content-type' => 'application/json'], json_encode(['error' => 'Forbidden'])),
     ]);
 
-    $client = new RadarClient('prj_test_sk_cafebabe', handler: HandlerStack::create($mock));
+    $client = new RadarClient(new GuzzleDriver('prj_test_sk_cafebabe', handler: HandlerStack::create($mock)));
 
     $client->reverseGeocode(new Coordinate(-74.1234, 40.1234));
 })->throws(ForbiddenException::class);
