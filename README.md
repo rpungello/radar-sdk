@@ -19,13 +19,17 @@ composer require rpungello/radar-sdk
 ### Initialize Client
 
 ```php
-$client = new \Rpungello\RadarSdk\RadarClient('your_secret_key_here');
+$client = new \Rpungello\RadarSdk\RadarClient(
+    new \Rpungello\RadarSdk\Drivers\GuzzleDriver('your_secret_key_here')
+);
 ```
 
 ### Forward Geocoding
 
 ```php
-$client = new \Rpungello\RadarSdk\RadarClient('your_secret_key_here');
+$client = new \Rpungello\RadarSdk\RadarClient(
+    new \Rpungello\RadarSdk\Drivers\GuzzleDriver('your_secret_key_here')
+);
 $response = $client->forwardGeocode('Full Address Here');
 ````
 
